@@ -65,7 +65,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ToDoVH> {
         holder.btnCompletado.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                confirmaCambioEstado("¿Estás seguro de cambiar el estado?", toDo).show();
+                confirmaCambioEstado("¿Estás seguro de cambiar el estado?", toDo, holder.getAdapterPosition()).show();
+            }
+        });
+
+        holder.btnEliminado.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                confirmaCambioEstado("¿Estás seguro de eliminar la tarea?", toDo, holder.getAdapterPosition()).show();
             }
         });
     }
@@ -75,26 +82,40 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ToDoVH> {
         return objects.size();
     }
 
-    private AlertDialog confirmaCambioEstado(String mensaje, ToDo toDo){
+    private AlertDialog confirmaCambioEstado(String mensaje, ToDo toDo, int posicion){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(mensaje);
-        builder.setCancelable(false);
+        if (mensaje.equalsIgnoreCase("¿Estás seguro de cambiar el estado?")){
+            builder.setTitle(mensaje);
+            builder.setCancelable(false);
 
-        builder.setNegativeButton("NO", null);
-        builder.setPositiveButton("SÍ", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                toDo.setCompletado(!toDo.isCompletado());
-                notifyDataSetChanged();
-            }
-        });
+            builder.setNegativeButton("NO", null);
+            builder.setPositiveButton("SÍ", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    toDo.setCompletado(!toDo.isCompletado());
+                    notifyItemChanged(posicion);
+                }
+            });
+        }else {
+            builder.setTitle(mensaje);
+            builder.setCancelable(false);
+
+            builder.setNegativeButton("NO", null);
+            builder.setPositiveButton("SÍ", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    objects.remove(posicion);
+                    notifyItemRemoved(posicion);
+                }
+            });
+        }
         return builder.create();
     }
 
-    public class ToDoVH extends  RecyclerView.ViewHolder{
+    public class ToDoVH extends RecyclerView.ViewHolder{
         TextView lblTitulo,lblContenido,lblFecha;
-        ImageButton btnCompletado;
+        ImageButton btnCompletado, btnEliminado;
 
         public ToDoVH(@NonNull View itemView) {
             super(itemView);
@@ -102,6 +123,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ToDoVH> {
             lblContenido = itemView.findViewById(R.id.lblContenidoToDoModelView);
             lblFecha = itemView.findViewById(R.id.lblFechaToDoModelView);
             btnCompletado = itemView.findViewById(R.id.btnCompletadoToDoModelView);
+            btnEliminado = itemView.findViewById(R.id.btnEliminarToDoModelView);
         }
     }
 }

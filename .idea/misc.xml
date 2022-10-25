@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.4036458333333333" />
+        <entry key="app/src/main/res/layout/add_todo_alertdialog.xml" value="0.40260416666666665" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/todo_view_model.xml" value="0.36061381074168797" />
       </map>
